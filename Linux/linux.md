@@ -40,8 +40,12 @@ After creating the above config file and saving we are ready to install:
     Organizational Unit Name (eg, section) []:
     Common Name (eg, your name or your server's hostname) []: *HOSTNAME OF THE BOX YOU ARE ON (If this is in AWS for example: ec2-18-215-144-147.compute-1.amazonaws.com OR on-prem the hostname/ip )* 
     Email Address []:
+**Note - the "common name" needs to be the hostname that will be actually receiving the data.**  
+For example:  
+- If your server is in AWS, you will use the FQDN in the EC2 console
+- If your server is on-prem, you can use either the FQDN or the IP of the server  
 
-### IF YOU DID THIS IN YOUR ROOT DIRECTORY, its ok. just move the above files to the root directory of logstash on rhel 8 that is "/etc/logstash"  
+## IF YOU DID THIS IN YOUR ROOT DIRECTORY, its ok. just move the above files to the root directory of logstash on rhel 8 that is "/etc/logstash"  
     cp ~/home/logstash-remote.crt /etc/logstash  
 
     cp ~/home/logstash-remote.key /etc/logstash  
@@ -50,7 +54,7 @@ After creating the above config file and saving we are ready to install:
     sudo chmod 644 logstash-remote.key  
 
 
-### CP or MV (I did mv) the example config file to create your new config.
+## CP or MV (I did mv) the example config file to create your new config.
 
 *I prefer to do 'mv' over cp but to each their own*
 
@@ -98,6 +102,8 @@ After creating the above config file and saving we are ready to install:
 ### **OPTIONAL** Install Sumo Logic collector to listen locally on the port to send encrypted TLS syslog to Sumo Logic  
 *NOTE* I used wget... But rhel 8 doesn't have it by default. Yes, don't judge this post because I used wget instead of curl.. you old school linux nerds :smirk: . Also this is why debian is better, cause wget is there by defualt :smiling_imp:
 
+*At Sumo we recommended installing collectors using [tokens](https://help.sumologic.com/docs/manage/security/installation-tokens/).*
+
 # WGET
     yum install wget
 
@@ -121,3 +127,10 @@ After creating the above config file and saving we are ready to install:
     sudo ./64.sh -q -Vsumo.token_and_url=<>
 
 *Note above, please paste token right after the "="
+
+- Setup a [syslog source](https://help.sumologic.com/docs/send-data/installed-collectors/sources/syslog-source/), this is done in the UI of sumo or via local sources config. 
+    - This should listen on the port you specified above in the config. The default is 6514
+
+Our help documentation can be found [here](https://help.sumologic.com/)
+
+
